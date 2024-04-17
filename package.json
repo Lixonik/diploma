@@ -1,0 +1,32 @@
+{
+  "name": "diploma",
+  "version": "0.0.1",
+  "description": "tests and docs for test-data-generator package",
+  "main": "./index.ts",
+  "scripts": {
+    "manual": "ts-node ./index.ts"
+  },
+  "keywords": [
+    "test-data-generator",
+    "test-data",
+    "data-generator",
+    "generator",
+    "test-generator",
+    "test",
+    "data",
+    "random",
+    "random-data",
+    "fake",
+    "fake-data"
+  ],
+  "author": "Boris Prokhorov",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "test-data-utils": "^2.0.5"
+  }
+}
