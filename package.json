@@ -27,6 +27,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "test-data-utils": "^2.0.5"
+    "test-data-utils": "^2.0.8"
   }
 }
