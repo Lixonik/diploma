@@ -27,6 +27,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "data-generators-benchmark": "^2.1.0",
     "test-data-utils": "^2.0.8"
   }
 }
