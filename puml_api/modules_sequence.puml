@@ -1,0 +1,62 @@
+@startuml
+participant "Client" as client
+participant "src/index.ts" as index
+participant "src/lib/test-utils.ts" as test_utils
+participant "src/lib/utils.ts" as utils
+participant "src/lib/trie/trie.ts" as trie
+participant "src/lib/persons/en/persons.ts" as en_persons
+participant "src/lib/persons/ru/persons.ts" as ru_persons
+participant "crypto" as crypto
+
+index -> client: export { generateUUID, generateNumber, generateString, generatePerson, generateMeaningfulString }
+test_utils -> index: export { generateUUID, generateNumber, generateString, generatePerson, generateMeaningfulString }
+
+client -> test_utils: generateNumber(opts)
+test_utils -> test_utils: new CNumberOpts(opts)
+alt max < min
+    test_utils -> test_utils: Error "max must be greater than min"
+else valid range
+    test_utils -> test_utils: Calculate random number in range
+end
+test_utils -> client: Number
+
+client -> test_utils: generateString(opts)
+test_utils -> test_utils: new CStringOpts(opts)
+test_utils -> crypto: getRandomValues(buffer)
+loop for each character
+    crypto -> test_utils: random byte
+    test_utils -> test_utils: Select char from charSet
+end
+test_utils -> client: String
+
+client -> test_utils: generateUUID()
+alt strictRandom
+    test_utils -> test_utils: uuidGenerator()
+else not strictRandom
+    test_utils -> test_utils: Custom UUID logic
+end
+test_utils -> client: UUID
+
+client -> test_utils: generatePerson(opts)
+test_utils -> test_utils: new CPartNameOpts(opts)
+alt language == "ru"
+    test_utils -> ru_persons: personsListRu[type][gender][length]
+else language == "en"
+    test_utils -> en_persons: personsListEn[type][gender][length]
+end
+test_utils -> client: Person Name
+
+client -> test_utils: generateMeaningfulString(opts)
+test_utils -> test_utils: new CMeaningfulStringOpts(opts)
+alt language == "en"
+    test_utils -> trie: getRandomFullString(length, separator)
+    trie -> utils: shuffleArray(array)
+else language == "ru"
+    test_utils -> trie: getRandomFullString(length, separator)
+    trie -> utils: shuffleArray(array)
+end
+trie -> test_utils: Meaningful String
+test_utils -> client: Meaningful String
+en_persons -> test_utils: Names, Surnames, Patronymics in English -> personsListEn
+ru_persons -> test_utils: Names, Surnames, Patronymics in Russian -> personsListRu
+@enduml
