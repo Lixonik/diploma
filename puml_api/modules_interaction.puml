@@ -1,0 +1,63 @@
+@startuml
+package "Some Client" {
+  [client]
+}
+
+node "test-data-utils" {
+  [index]
+}
+
+node "Utilities" {
+  [test_utils]
+  [init_classes]
+  [utils]
+  [constants]
+}
+
+database "Dictionaries" {
+  [en_dictionary]
+  [ru_dictionary]
+}
+
+database "Person Lists" {
+  [en_persons]
+  [ru_persons]
+}
+
+node "Data Structures" {
+  [trie]
+}
+
+cloud "Randomness" {
+  [crypto]
+}
+
+client --> index : uses
+index --> test_utils : uses
+
+test_utils --> init_classes : uses
+note top of init_classes : for options instances creation
+
+test_utils --> trie : uses
+note top of trie : for generating meaningful strings
+
+test_utils --> crypto : uses
+note top of crypto : for random strings gen
+
+index --> test_utils : redirects import
+
+test_utils --> constants : gets alphabet for string gen
+test_utils --> trie : gets tries for string gen
+
+test_utils -up-> crypto : calls for random numbers/bytes
+test_utils ..> en_persons : uses for English names
+test_utils ..> ru_persons : uses for Russian names
+test_utils ..> en_dictionary : uses for meaningful string gen
+test_utils ..> ru_dictionary : uses for meaningful string gen
+
+init_classes --> utils : for number calculation
+init_classes --> constants : uses ENGLISH_ALPHABET
+init_classes -up-> trie : to generate tries for dictionaries
+
+crypto --> test_utils : returns random bytes
+@enduml
