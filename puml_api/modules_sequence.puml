@@ -1,62 +1,69 @@
 @startuml
-participant "Client" as client
-participant "src/index.ts" as index
-participant "src/lib/test-utils.ts" as test_utils
-participant "src/lib/utils.ts" as utils
-participant "src/lib/trie/trie.ts" as trie
-participant "src/lib/persons/en/persons.ts" as en_persons
-participant "src/lib/persons/ru/persons.ts" as ru_persons
+participant "client" as client
+participant "index" as index
+participant "test_utils" as test_utils
+participant "constants" as constants
+participant "init_classes" as init_classes
+participant "utils" as utils
+participant "trie" as trie
+participant "en_persons" as en_persons
+participant "ru_persons" as ru_persons
+participant "en_dictionary" as en_dictionary
+participant "ru_dictionary" as ru_dictionary
 participant "crypto" as crypto
 
-index -> client: export { generateUUID, generateNumber, generateString, generatePerson, generateMeaningfulString }
-test_utils -> index: export { generateUUID, generateNumber, generateString, generatePerson, generateMeaningfulString }
+client -> index : import functions
+index -> test_utils : redirect imports
 
-client -> test_utils: generateNumber(opts)
-test_utils -> test_utils: new CNumberOpts(opts)
+test_utils -> constants : import ENGLISH_ALPHABET
+test_utils -> trie : import tries
+
+client -> test_utils : generateNumber(opts)
+test_utils -> init_classes : new CNumberOpts(opts)
 alt max < min
-    test_utils -> test_utils: Error "max must be greater than min"
+    init_classes -> test_utils : Error "max must be greater than min"
 else valid range
-    test_utils -> test_utils: Calculate random number in range
+    init_classes -> utils : Calculate random number in range
 end
-test_utils -> client: Number
+test_utils -> client : Number
 
-client -> test_utils: generateString(opts)
-test_utils -> test_utils: new CStringOpts(opts)
-test_utils -> crypto: getRandomValues(buffer)
-loop for each character
-    crypto -> test_utils: random byte
-    test_utils -> test_utils: Select char from charSet
-end
-test_utils -> client: String
+client -> test_utils : generateString(opts)
+test_utils -> init_classes : new CStringOpts(opts)
+init_classes -> constants : use ENGLISH_ALPHABET
+test_utils -> crypto : Get random values for buffer
+crypto -> test_utils : Random bytes
+test_utils -> init_classes : Select characters from charSet
+test_utils -> client : String
 
-client -> test_utils: generateUUID()
+client -> test_utils : generateUUID(strictRandom)
 alt strictRandom
-    test_utils -> test_utils: uuidGenerator()
+    test_utils -> test_utils : uuidGenerator()
 else not strictRandom
-    test_utils -> test_utils: Custom UUID logic
+    test_utils -> test_utils : Custom UUID logic
 end
-test_utils -> client: UUID
+test_utils -> client : UUID
 
-client -> test_utils: generatePerson(opts)
-test_utils -> test_utils: new CPartNameOpts(opts)
+client -> test_utils : generatePerson(opts)
+test_utils -> init_classes : new CPartNameOpts(opts)
 alt language == "ru"
-    test_utils -> ru_persons: personsListRu[type][gender][length]
+    test_utils -> ru_persons : personsListRu[type][gender][length]
+    test_utils -> test_utils : Decline word using declineWord method
 else language == "en"
-    test_utils -> en_persons: personsListEn[type][gender][length]
+    test_utils -> en_persons : personsListEn[type][gender][length]
 end
-test_utils -> client: Person Name
+test_utils -> client : Person Name
 
-client -> test_utils: generateMeaningfulString(opts)
-test_utils -> test_utils: new CMeaningfulStringOpts(opts)
+client -> test_utils : generateMeaningfulString(opts)
+test_utils -> init_classes : new CMeaningfulStringOpts(opts)
 alt language == "en"
-    test_utils -> trie: getRandomFullString(length, separator)
-    trie -> utils: shuffleArray(array)
+    test_utils -> en_dictionary : use EN_PREFIXES, EN_WORDS, EN_SUFFIXES
+    init_classes -> trie : Generate English trie using EN_PREFIXES, EN_WORDS, EN_SUFFIXES
+    trie -> test_utils : en.getRandomFullString(length, separator)
 else language == "ru"
-    test_utils -> trie: getRandomFullString(length, separator)
-    trie -> utils: shuffleArray(array)
+    test_utils -> ru_dictionary : use RU_PREFIXES, RU_WORDS, RU_SUFFIXES
+    init_classes -> trie : Generate Russian trie using RU_PREFIXES, RU_WORDS, RU_SUFFIXES
+    trie -> test_utils : ru.getRandomFullString(length, separator)
 end
-trie -> test_utils: Meaningful String
-test_utils -> client: Meaningful String
-en_persons -> test_utils: Names, Surnames, Patronymics in English -> personsListEn
-ru_persons -> test_utils: Names, Surnames, Patronymics in Russian -> personsListRu
+trie -> test_utils : Return meaningful string
+test_utils -> client : Meaningful String
 @enduml
