@@ -28,7 +28,7 @@ node "Data Structures" {
   [trie]
 }
 
-cloud "Randomness" {
+cloud "Web API" {
   [crypto]
 }
 
