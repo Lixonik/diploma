@@ -3,15 +3,14 @@ package "Some Client" {
   [client]
 }
 
-node "test-data-utils" {
+node "Package" {
   [index]
-}
-
-node "Utilities" {
-  [test_utils]
-  [init_classes]
-  [utils]
-  [constants]
+  package "Utilities" {
+    [test_utils]
+    [init_classes]
+    [utils]
+    [constants]
+  }
 }
 
 database "Dictionaries" {
@@ -24,7 +23,7 @@ database "Person Lists" {
   [ru_persons]
 }
 
-node "Data Structures" {
+node "Data Structure" {
   [trie]
 }
 
@@ -32,32 +31,32 @@ cloud "Web API" {
   [crypto]
 }
 
-client --> index : uses
-index --> test_utils : uses
+client --> index : imports functions
+index -r-> test_utils : redirects imports
 
-test_utils --> init_classes : uses
-note top of init_classes : for options instances creation
+test_utils --> constants : imports ENGLISH_ALPHABET
+test_utils --> trie : operates with tries
+test_utils -u-> crypto : for UUID and random strings
 
-test_utils --> trie : uses
-note top of trie : for generating meaningful strings
+test_utils --> init_classes : creates option instances
+test_utils --> utils : utilizes for random generation
+test_utils -u-> en_persons : accesses English names
+test_utils -u-> ru_persons : accesses Russian names
 
-test_utils --> crypto : uses
-note top of crypto : for random strings gen
-
-index --> test_utils : redirects import
-
-test_utils --> constants : gets alphabet for string gen
-test_utils --> trie : gets tries for string gen
-
-test_utils -up-> crypto : calls for random numbers/bytes
-test_utils ..> en_persons : uses for English names
-test_utils ..> ru_persons : uses for Russian names
-test_utils ..> en_dictionary : uses for meaningful string gen
-test_utils ..> ru_dictionary : uses for meaningful string gen
-
-init_classes --> utils : for number calculation
-init_classes --> constants : uses ENGLISH_ALPHABET
-init_classes -up-> trie : to generate tries for dictionaries
+test_utils -u-> en_dictionary : accesses English dictionary
+test_utils -u-> ru_dictionary : accesses Russian dictionary
 
 crypto --> test_utils : returns random bytes
+
+init_classes --> constants : uses ENGLISH_ALPHABET
+init_classes --> utils : utilizes for option instances
+
+trie --> utils : depends on for trie manipulation
+trie --> test_utils : returns meaningful strings
+
+'note over trie, test_utils
+'    Trie usage for generating
+'    meaningful strings is a key part
+'    of the utils module's functionality.
+'end note
 @enduml

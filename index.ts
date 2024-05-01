@@ -1,6 +1,6 @@
 import { generateMeaningfulString, generateNumber, generatePerson, generateString, generateUUID } from 'test-data-utils'
 import { faker } from '@faker-js/faker'
-import { Benchmark } from 'data-generators-benchmark'
+import { Benchmark } from '../data-generators-benchmark/src'
 
 
 for (let i = 0; i < 4097; i++) {
