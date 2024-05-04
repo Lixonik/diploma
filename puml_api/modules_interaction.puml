@@ -11,35 +11,35 @@ node "Package" {
     [utils]
     [constants]
   }
+  database "Dictionaries" {
+    [en_dictionary]
+    [ru_dictionary]
+  }
+
+  database "Person Lists" {
+    [en_persons]
+    [ru_persons]
+  }
+
+  node "Data Structure" {
+    [trie]
+  }
 }
 
-database "Dictionaries" {
-  [en_dictionary]
-  [ru_dictionary]
-}
-
-database "Person Lists" {
-  [en_persons]
-  [ru_persons]
-}
-
-node "Data Structure" {
-  [trie]
-}
 
 cloud "Web API" {
   [crypto]
 }
 
-client --> index : imports functions
-index -r-> test_utils : redirects imports
+client -l-> index : imports functions
+index -u-> test_utils : redirects imports
 
 test_utils --> constants : imports ENGLISH_ALPHABET
-test_utils --> trie : operates with tries
+test_utils -l-> trie : operates with tries
 test_utils -u-> crypto : for UUID and random strings
 
 test_utils --> init_classes : creates option instances
-test_utils --> utils : utilizes for random generation
+test_utils --> utils : create tries instances
 test_utils -u-> en_persons : accesses English names
 test_utils -u-> ru_persons : accesses Russian names
 
@@ -49,14 +49,8 @@ test_utils -u-> ru_dictionary : accesses Russian dictionary
 crypto --> test_utils : returns random bytes
 
 init_classes --> constants : uses ENGLISH_ALPHABET
-init_classes --> utils : utilizes for option instances
+init_classes -l-> test_utils : utilizes for option instances
 
-trie --> utils : depends on for trie manipulation
+trie -u-> utils : depends on for trie manipulation
 trie --> test_utils : returns meaningful strings
-
-'note over trie, test_utils
-'    Trie usage for generating
-'    meaningful strings is a key part
-'    of the utils module's functionality.
-'end note
 @enduml
