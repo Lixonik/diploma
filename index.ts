@@ -38,3 +38,4 @@ Benchmark.pushCandidate(generateString.bind(null, {
 }), faker.string.fromCharacters.bind(null, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 1000))
 Benchmark.plotAndSaveMeasurementTimesCharts()
 Benchmark.clearCandidates()
+

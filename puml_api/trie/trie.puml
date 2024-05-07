@@ -1,0 +1,33 @@
+@startuml
+class TrieNode {
+  +children: Map<String, TrieNode>
+  +isEndOfWord: boolean
+  +constructor()
+}
+
+class Trie {
+  -root: TrieNode
+  +constructor()
+  +insertDictionary(prefixes: string[], roots: string[], suffixes: string[]): void
+  +getRandomFullString(length: number, separator: string): string
+  -insertAllIntoOrigin(words: string[]): void
+  -insertAllIntoTails(words: string[]): void
+  -insertAfterNode(root: TrieNode, word: string): void
+  -insertAllAfterNode(root: TrieNode, words: string[]): void
+  -findTails(): TrieNode[]
+}
+
+Trie o-- TrieNode
+
+note right of Trie
+  Trie представляет основную структуру
+  префиксного дерева, включая методы
+  для вставки слов и поиска хвостов.
+end note
+
+note right of TrieNode
+  TrieNode представляет узел в префиксном
+  дереве, содержащий мапу дочерних элементов
+  и флаг окончания слова.
+end note
+@enduml

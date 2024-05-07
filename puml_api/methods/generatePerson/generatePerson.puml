@@ -1,0 +1,40 @@
+@startuml
+!theme plain
+
+actor Client as "Client"
+participant "generatePerson()" as GenPerson
+participant "CPartNameOpts" as PartOptions
+participant declineWord as "declineWord()"
+participant Math as "Math"
+database "PERSONS_RU" as PERSONS_RU
+database "PERSONS_EN" as PERSONS_EN
+
+Client -> GenPerson : вызов функции с параметрами opts
+
+alt opts не предоставлены
+    GenPerson -> PartOptions : создает объект CPartNameOpts с параметрами по умолчанию
+    PartOptions --> GenPerson : возвращает объект opts {gender: 'male', type: 'surname', length: 'medium', language: 'en', padej: 'nominative'}
+else opts предоставлены
+    GenPerson -> PartOptions : создает объект CPartNameOpts с переданными opts
+    PartOptions --> GenPerson : возвращает объект opts с заданными параметрами
+end
+
+alt language == 'ru'
+    GenPerson -> PERSONS_RU : получает русские имена, фамилии, отчества
+    PERSONS_RU -> GenPerson : возвращает русские имена, фамилии, отчества
+else language == 'en'
+    GenPerson -> PERSONS_EN : получает английские имена, фамилии, отчества
+    PERSONS_EN -> GenPerson : возвращает английские имена, фамилии, отчества
+end
+
+GenPerson -> Math : Генерирует случайное число в диапазоне [0, 1], используя Math.random()
+Math -> GenPerson : Возвращает случайное число в диапазоне [0, 1]
+
+GenPerson -> GenPerson : выбирает случайное\nимя, фамилию или отчество\nна основе length и gender
+alt если language == 'ru' и требуется склонение
+    GenPerson -> declineWord : применить склонение к выбранному слову
+    declineWord --> GenPerson : возвращает склоненное слово
+end
+
+GenPerson -> Client : возвращает сгенерированное имя, фамилию\n или отчество в заданном падеже
+@enduml

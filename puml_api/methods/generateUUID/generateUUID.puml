@@ -1,16 +1,28 @@
 @startuml
+!theme plain
 
-title generateUUID algorithm
+actor Client
 
-start
-:Initialize array with 16 random bytes;
-if (strictRandom is true) then (yes)
-    :Return UUID v4 via uuid package;
-else (no)
-    :Shuffle cashedArrayForUUID;
-    :Adjust certain bits to conform with \nUUID v4 format;
-    :Convert adjusted array to UUID;
-endif
-stop
+participant "generateUUID()" as GenUUID
+participant "uuidGenerator()" as UUIDGen
+participant "UUID Counter" as Counter
 
+Client -> GenUUID : вызов функции с параметром strictRandom
+alt если strictRandom == true
+    GenUUID -> UUIDGen : вызов встроенного генератора UUID
+    UUIDGen -> GenUUID : возвращает сгенерированный UUID
+    GenUUID -> Client : возвращает UUID
+else если strictRandom == false
+    GenUUID -> Counter : получает текущее значение счетчика
+    Counter -> GenUUID : возвращает значение счетчика\n(uuidCounter.toString(16))
+
+    GenUUID -> Counter : инкрементирует счетчик\n(uuidCounter++)
+    Counter -> GenUUID : проверяет значение счетчика
+    alt если счетчик достиг 4096
+        Counter -> Counter : сброс счетчика до 0
+    end
+
+    GenUUID -> GenUUID : создание customUUID\n(использует базовый шаблон и счетчик)
+    GenUUID -> Client : возвращает customUUID
+end
 @enduml

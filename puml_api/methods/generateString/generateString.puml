@@ -1,0 +1,30 @@
+@startuml
+!theme plain
+
+actor Client as "Client"
+participant "generateString()" as GenString
+participant "CStringOpts" as StrOptions
+participant "crypto" as Crypto
+participant "Math" as Math
+
+Client -> GenString : вызов функции с параметрами opts
+
+alt opts не предоставлены
+    GenString -> StrOptions : создать объект CStringOpts с параметрами по умолчанию
+    StrOptions --> GenString : возвращает объект opts {charSet: ENGLISH_ALPHABET, length: 5}
+else opts предоставлены
+    GenString -> StrOptions : создать объект CStringOpts с переданными opts
+    StrOptions --> GenString : возвращает объект opts с заданным набором символов и длиной
+end
+
+GenString -> Crypto : запросить криптографически безопасный массив случайных значений
+Crypto --> GenString : возвращает массив случайных значений
+
+loop для каждого элемента в массиве
+    GenString -> Math : рассчитать индекс случайного символа из charSet
+    Math -> GenString : возвращает индекс символа
+    GenString -> GenString : добавить символ из charSet по индексу к результату
+end
+
+GenString -> Client : возвращает сгенерированную строку
+@enduml

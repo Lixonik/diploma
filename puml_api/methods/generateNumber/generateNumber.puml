@@ -1,0 +1,27 @@
+@startuml
+!theme plain
+
+actor Client as "Client"
+participant "generateNumber()" as GenNumber
+participant "CNumberOpts" as NumOptions
+participant Math as "Math"
+
+Client -> GenNumber : вызов функции с параметрами opts
+
+alt opts не предоставлены
+    GenNumber -> NumOptions : установить объект NumberOpts по умолчанию
+    NumOptions --> GenNumber : возвращает объект {min: 0, max: 100}
+else opts предоставлены
+    GenNumber -> NumOptions : установить объект NumberOpts используя переданные opts
+    NumOptions --> GenNumber : возвращает объект с минимальным и максимальным значениями из opts
+end
+
+GenNumber -> GenNumber : Проверка, что max >= min
+alt если max < min
+    GenNumber -> Client : Выбрасывает ошибку "максимальный предел должен быть больше минимального!"
+else если диапазон корректен
+    GenNumber -> Math : Генерирует случайное число в диапазоне [0, 1], используя Math.random()
+    Math -> GenNumber : Возвращает случайное число в диапазоне [0, 1]
+    GenNumber -> Client : Возвращает сгенерированное число приведённое к заданному диапазону
+end
+@enduml

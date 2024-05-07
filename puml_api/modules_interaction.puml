@@ -26,7 +26,6 @@ node "Package" {
   }
 }
 
-
 cloud "Web API" {
   [crypto]
 }

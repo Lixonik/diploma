@@ -1,0 +1,26 @@
+@startuml
+!theme plain
+
+actor client as "Client"
+participant "generateMeaningfulString()" as GenMeanStr
+participant "CMeaningfulStringOpts" as MeanStrOptions
+participant "Trie" as EnOrRuTrie
+participant "getRandomFullString()" as GetRndFullStr
+
+client -> GenMeanStr : вызов функции с параметрами opts
+
+alt opts не предоставлены
+    GenMeanStr -> MeanStrOptions : установить объект MeaningfulStringOpts по умолчанию
+    MeanStrOptions --> GenMeanStr : возвращает объект {length: 5, language: 'en', separator: ''}
+else opts предоставлены
+    GenMeanStr -> MeanStrOptions : установить объект MeaningfulStringOpts используя переданные opts
+    MeanStrOptions --> GenMeanStr : возвращает объект с значениями из opts
+end
+
+GenMeanStr -> EnOrRuTrie : Выбрать Trie в зависимости от языка
+
+GenMeanStr -> GetRndFullStr : вызов метода getRandomFullString() с параметрами (length, separator)
+GetRndFullStr -> GenMeanStr : Возвращает сгенерированную строку
+
+GenMeanStr -> client : Возвращает осмысленную строку заданной длины
+@enduml
