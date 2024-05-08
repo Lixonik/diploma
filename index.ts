@@ -3,39 +3,49 @@ import { faker } from '@faker-js/faker'
 import { Benchmark } from '../data-generators-benchmark/src'
 
 
-for (let i = 0; i < 4097; i++) {
-	console.log(generateUUID())
+const stubNumberOpts = {
+	min: 0,
+	max: 100
+}
+const stubStringOpts = {
+	charSet: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+	length: 1000
 }
 
-console.log(generateMeaningfulString({
-	length: 1000,
-	separator: ' ',
-}))
-
-console.log(generatePerson({
+const stubPartNamesOpts = {
 	gender: 'male',
-}))
+	type: 'name',
+	language: 'en'
+} as const
 
-console.log(faker.person.firstName('male'))
+const stubMeaningfulStringOpts = {
+	length: 500,
+	separator: '-',
+	language: 'en'
+} as const
 
 Benchmark.pushCandidate(generateUUID.bind(null, false), faker.string.uuid)
 Benchmark.plotAndSaveMeasurementTimesCharts()
+Benchmark.printAvgGenerationTimes()
 Benchmark.clearCandidates()
 
-Benchmark.pushCandidate(generateNumber.bind(null, {
-	min: 0,
-	max: 100
-}), faker.number.int.bind(null, {
-	min: 0,
-	max: 100
-}))
+Benchmark.pushCandidate(generateNumber.bind(null, stubNumberOpts), faker.number.int.bind(null, stubNumberOpts))
 Benchmark.plotAndSaveMeasurementTimesCharts()
+Benchmark.printAvgGenerationTimes()
 Benchmark.clearCandidates()
 
-Benchmark.pushCandidate(generateString.bind(null, {
-	charSet: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-	length: 1000
-}), faker.string.fromCharacters.bind(null, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 1000))
+Benchmark.pushCandidate(generateString.bind(null, stubStringOpts), faker.string.fromCharacters.bind(null, stubStringOpts.charSet, stubStringOpts.length))
 Benchmark.plotAndSaveMeasurementTimesCharts()
+Benchmark.printAvgGenerationTimes()
+Benchmark.clearCandidates()
+
+Benchmark.pushCandidate(generatePerson.bind(null, stubPartNamesOpts), faker.person.firstName.bind(null, stubPartNamesOpts.gender))
+Benchmark.plotAndSaveMeasurementTimesCharts()
+Benchmark.printAvgGenerationTimes()
+Benchmark.clearCandidates()
+
+Benchmark.pushCandidate(generateMeaningfulString.bind(null, stubMeaningfulStringOpts), faker.lorem.slug.bind(null, stubMeaningfulStringOpts.length))
+Benchmark.plotAndSaveMeasurementTimesCharts()
+Benchmark.printAvgGenerationTimes()
 Benchmark.clearCandidates()
 
