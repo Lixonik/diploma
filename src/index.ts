@@ -1,6 +1,6 @@
 import { generateMeaningfulString, generateNumber, generatePerson, generateString, generateUUID } from 'test-data-utils'
 import { faker } from '@faker-js/faker'
-import { Benchmark } from '../../data-generators-benchmark/src'
+import { Benchmark } from 'data-generators-benchmark'
 
 
 const stubNumberOpts = {
