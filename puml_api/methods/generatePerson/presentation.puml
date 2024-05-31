@@ -1,0 +1,29 @@
+@startuml
+|Client|
+start
+:вызов generatePerson(opts);
+
+|generatePerson|
+if (opts не предоставлены) then (да)
+    :создать CPartNameOpts по умолчанию;
+else (нет)
+    :создать CPartNameOpts с opts;
+endif
+
+if (language == 'ru') then (да)
+    :получить данные из PERSONS_RU;
+else (нет)
+    :получить данные из PERSONS_EN;
+endif
+
+:генерировать случайный индекс;
+:выбрать случайное имя;
+
+if (language == 'ru' и требуется склонение) then (да)
+    :применить склонение;
+endif
+
+|Client|
+:вернуть результат;
+stop
+@enduml

@@ -1,0 +1,25 @@
+@startuml
+|Client|
+start
+:вызов generateNumber(opts);
+
+|generateNumber|
+if (opts не предоставлены) then (да)
+    :установить NumberOpts по умолчанию;
+else (нет)
+    :установить NumberOpts с opts;
+endif
+
+:проверить, что max >= min;
+if (max < min) then (да)
+    :выбросить ошибку;
+else (нет)
+    :вычислить верхнюю границу генерации: range = max - min + 1;
+    :генерировать случайное число randomNumber ∈ [0, range];
+    :привести число к заданному диапазону: randomNumber + min;
+endif
+
+|Client|
+:вернуть сгенерированное число;
+stop
+@enduml

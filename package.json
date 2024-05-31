@@ -4,7 +4,7 @@
   "description": "tests and docs for test-data-generator package",
   "main": "./index.ts",
   "scripts": {
-    "manual": "ts-node ./index.ts"
+    "manual": "ts-node ./src/index.ts"
   },
   "keywords": [
     "test-data-generator",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
-    "data-generators-benchmark": "^2.1.1",
-    "test-data-utils": "^2.0.8"
+    "data-generators-benchmark": "^2.1.2",
+    "test-data-utils": "^2.2.0"
   }
 }
